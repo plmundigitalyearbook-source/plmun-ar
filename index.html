@@ -3,24 +3,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      /* Button to handle mobile's "user gesture" requirement for audio */
+      #ui { position: fixed; top: 10px; left: 10px; z-index: 1000; }
+      button { padding: 10px; background: #007AFF; color: white; border: none; border-radius: 5px; }
+    </style>
   </head>
   <body>
+    <div id="ui">
+      <button id="playBtn">Start Scanner</button>
+    </div>
+
     <a-scene mindar-image="imageTargetSrc: ./targets.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
-        <video id="vid" src="https://www.w3schools.com/html/mov_bbb.mp4" loop="true" crossorigin="anonymous"></video>
+        <video id="yearbookVideo" src="./yearbook_video.mp4" preload="auto" loop="true" crossorigin="anonymous" webkit-playsinline playsinline></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="#vid" width="1" height="0.55" position="0 0 0"></a-video>
+        <a-video src="#yearbookVideo" width="1" height="0.55" position="0 0 0"></a-video>
       </a-entity>
     </a-scene>
 
     <script>
-      const video = document.querySelector('#vid');
+      const video = document.querySelector('#yearbookVideo');
+      const btn = document.querySelector('#playBtn');
+      
+      // Mobile browsers need a click to allow video sound
+      btn.addEventListener('click', () => {
+        video.play(); 
+        video.pause(); // Initialize the video stream
+        btn.style.display = 'none';
+      });
+
       const target = document.querySelector('[mindar-image-target]');
-      // Autoplay on scan
       target.addEventListener("targetFound", () => { video.play(); });
       target.addEventListener("targetLost", () => { video.pause(); });
     </script>
