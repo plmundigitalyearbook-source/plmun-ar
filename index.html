@@ -20,6 +20,7 @@
     <script>
       const video = document.querySelector('#vid');
       const target = document.querySelector('[mindar-image-target]');
+      // Autoplay on scan
       target.addEventListener("targetFound", () => { video.play(); });
       target.addEventListener("targetLost", () => { video.pause(); });
     </script>
